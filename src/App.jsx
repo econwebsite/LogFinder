@@ -107,7 +107,7 @@ function App() {
 
   return (
     <Layout style={{ minHeight: '100vh', background: 'white' }}>
-      <Header style={{ background: '#344ea1', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Header style={{ background: '#1b66da', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Title style={{ color: '#fff', margin: 0 }} level={2}>
           Log File Viewer
         </Title>

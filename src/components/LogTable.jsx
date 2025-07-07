@@ -29,7 +29,7 @@ const LogTable = ({ logs }) => {
       width: '20%',
     },
     {
-      title: 'Landing Page',
+      title: 'Referral Page',
       dataIndex: 'referrer',
       key: 'referrer',
       width: '33%',
@@ -64,15 +64,16 @@ const LogTable = ({ logs }) => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={logs}
-      pagination={{ pageSize: 10 }}
-      bordered
-      size="middle"
-      scroll={{ x: 'max-content' }}
-      rowClassName={(record) => (record.isLandingPage ? 'landing-page-row' : '')}
-    />
+  <Table
+  columns={columns}
+  dataSource={logs}
+  pagination={{ pageSize: 1000 }}
+  bordered
+  size="middle"
+  scroll={{ x: 'max-content', y: 570 }} 
+  rowClassName={(record) => (record.isLandingPage ? 'landing-page-row' : '')}
+/>
+
   );
 };
 

@@ -5,7 +5,7 @@ body {
 }
 
 .ant-table-thead .ant-table-cell {
-  background-color: #344ea1 !important;
+  background-color: #1b66da !important;
   color: white !important;
   font-weight: 600;
 }
@@ -78,4 +78,28 @@ body {
 
 .ant-table-cell {
   white-space: nowrap;
+}
+.ant-table-body::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+.ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.ant-table-body {
+  scrollbar-width:thick;
+  scrollbar-color: #1b66da white;
 }
