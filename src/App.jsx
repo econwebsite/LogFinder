@@ -20,18 +20,24 @@ function App() {
   const [fileLogMap, setFileLogMap] = useState({});
 
   const handleFileRead = (newLogs, file) => {
-    const logsWithFormattedDate = newLogs.map(log => ({
-      ...log,
-      formattedDate: dayjs(log.timestamp, 'YYYY-MM-DD HH:mm:ss').isValid()
-        ? dayjs(log.timestamp, 'YYYY-MM-DD HH:mm:ss')
-        : dayjs(),
-      isLandingPage: log.referrer && !log.referrer.includes(log.action.split(' ')[1])
-    }));
+const logsWithFormattedDate = newLogs.map(log => ({
+  ...log,
+  formattedDate: dayjs(log.timestamp, 'YYYY-MM-DD HH:mm:ss').isValid()
+    ? dayjs(log.timestamp, 'YYYY-MM-DD HH:mm:ss')
+    : dayjs(),
+  isLandingPage: log.referrer && 
+    !log.referrer.includes(log.action.split(' ')[1]) &&
+    !log.referrer.startsWith(window.location.origin)
+}));
 
-    const sortedLogs = [...logsWithFormattedDate].sort((a, b) => 
-      (b.isLandingPage - a.isLandingPage) || 
-      (a.timestamp.localeCompare(b.timestamp))
-    );
+  const sortedLogs = [...logsWithFormattedDate].sort((a, b) => {
+  if (a.timestamp === 'N/A' && b.timestamp !== 'N/A') return -1;
+  if (b.timestamp === 'N/A' && a.timestamp !== 'N/A') return 1;
+  if (a.isLandingPage && !b.isLandingPage) return -1;
+  if (!a.isLandingPage && b.isLandingPage) return 1;
+  return a.timestamp.localeCompare(b.timestamp);
+});
+
 
     setLogs(prevLogs => [...prevLogs, ...sortedLogs]);
     setFilteredLogs(prevLogs => [...prevLogs, ...sortedLogs]);

@@ -14,34 +14,64 @@ const FileUpload = ({ onFileRead, setLoading, multiple = false }) => {
     return urlMatch ? urlMatch[0] : '-';
   };
 
-  const parseLine = (line, index) => {
+ const parseLine = (line, index) => {
+  const tokens = line.trim().split(/\s+/);
+  if (tokens.length >= 12) {
     try {
-      const parts = line.trim().split(/\s+/);
-      if (parts.length < 10) return null;
+      const timestamp = `${tokens[0]} ${tokens[1]}`;
+      const clientIP = tokens[tokens.length - 1]; 
+      const method = tokens[3];
+      const uri = tokens[4];
+      const referrer = tokens[tokens.length - 6];
 
-      const timestamp = `${parts[0]} ${parts[1]}`;
-     const clientIP = parts[parts.length - 1] || 'unknown';
-      const method = parts[3] || '';
-      const uri = parts[4] || '';
-      const query = parts[5] !== '-' ? `?${parts[5]}` : '';
-      const action = `${method} ${uri}${query}`;
+      let query = '';
+      if (tokens[5] !== '-' && tokens[5] !== '') {
+        query = `?${tokens[5]}`;
+      }
+
+      const action = `${method} ${uri === '/' ? 'Home Page' : uri}${query}`;
+      const cleanReferrer = referrer.startsWith('http') ? referrer : '-';
 
       return {
-        key: `${timestamp}-${clientIP}-${index}`, 
+        key: `${timestamp}-${clientIP}-${index}`,
         timestamp,
-        email: extractEmail(line),
         clientIP,
+        email: extractEmail(line),
         action,
-        referrer: extractReferrer(line),
-        formattedDate: dayjs(timestamp, 'YYYY-MM-DD HH:mm:ss').isValid() 
-          ? dayjs(timestamp, 'YYYY-MM-DD HH:mm:ss') 
-          : dayjs()
+        referrer: cleanReferrer,
+        isLandingPage:
+          cleanReferrer !== '-' &&
+          !cleanReferrer.includes(uri) &&
+          !cleanReferrer.startsWith(window.location.origin),
+        formattedDate: dayjs(timestamp, 'YYYY-MM-DD HH:mm:ss').isValid()
+          ? dayjs(timestamp, 'YYYY-MM-DD HH:mm:ss')
+          : dayjs(),
       };
     } catch (err) {
-      console.error("Skipping malformed line:", line);
+      console.error('Skipping malformed line:', line);
       return null;
     }
-  };
+  }
+
+  if (tokens.length >= 2) {
+   
+    const possibleReferrer = tokens[0].startsWith('http') ? tokens[0] : '-';
+    const possibleIP = tokens[tokens.length - 1];
+
+    return {
+      key: `partial-${possibleIP}-${index}`,
+      timestamp: 'N/A',
+      clientIP: possibleIP || 'unknown',
+      email: 'anonymous',
+      action: 'N/A',
+      referrer: possibleReferrer,
+      isLandingPage: possibleReferrer !== '-' && !possibleReferrer.startsWith(window.location.origin),
+      formattedDate: dayjs(), 
+    };
+  }
+  return null;
+};
+
 
   const beforeUpload = (file) => {
     setLoading(true);

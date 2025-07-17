@@ -8,7 +8,6 @@ const LogTable = ({ logs }) => {
       dataIndex: 'timestamp',
       key: 'timestamp',
       width: '15%',
-      // sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
     },
     {
       title: 'IP Address',
@@ -27,40 +26,46 @@ const LogTable = ({ logs }) => {
       dataIndex: 'action',
       key: 'action',
       width: '20%',
+      
     },
     {
-      title: 'Referral Page',
-      dataIndex: 'referrer',
-      key: 'referrer',
-      width: '33%',
-      render: (referrer, record) =>
-        record.isLandingPage ? (
-          <Tag
-            color="green"
-            style={{
-              maxWidth: '100%',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: 'inline-block',
-            }}
-          >
-            {referrer}
-          </Tag>
-        ) : (
-          <span
-            style={{
-              maxWidth: '100%',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: 'inline-block',
-            }}
-          >
-            {referrer}
-          </span>
-        ),
-    },
+  title: 'Referral Page',
+  dataIndex: 'referrer',
+  key: 'referrer',
+  width: '33%',
+  render: (referrer, record) => {
+    const displayText =
+      referrer === '-' || referrer === '/' ? 'Home Page' : referrer;
+
+    return record.isLandingPage ? (
+      <Tag
+        color="green"
+        style={{
+          maxWidth: '100%',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: 'inline-block',
+        }}
+      >
+        {displayText}
+      </Tag>
+    ) : (
+      <span
+        style={{
+          maxWidth: '100%',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: 'inline-block',
+        }}
+      >
+        {displayText}
+      </span>
+    );
+  },
+},
+
   ];
 
   return (
